@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Otisk prstu</title>
+</head>
+<body>
+  <h2>Ověření otiskem prstu</h2>
+  <button onclick="login()">Přihlásit se</button>
+
+  <script>
+    async function login() {
+      if (!window.PublicKeyCredential) {
+        alert("WebAuthn není podporováno.");
+        return;
+      }
+
+      try {
+        const credential = await navigator.credentials.get({
+          publicKey: {
+            challenge: new Uint8Array(32),
+            timeout: 60000,
+            allowCredentials: [],
+            userVerification: "preferred"
+          }
+        });
+        alert("Přihlášení úspěšné!");
+      } catch (e) {
+        alert("Chyba: " + e.message);
+      }
+    }
+  </script>
+</body>
+</html>
