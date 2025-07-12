@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ověření otiskem</title>
+  <title>Krokoměr</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    #steps { font-size: 48px; margin-top: 20px; }
+  </style>
 </head>
 <body>
-  <h2>Ověření otiskem prstu</h2>
-  <button onclick="login()">Přihlásit se</button>
+  <h1>🚶 Krokoměr</h1>
+  <p>Kroky:</p>
+  <div id="steps">0</div>
 
   <script>
-    async function login() {
-      if (!window.PublicKeyCredential) {
-        alert("WebAuthn není podporováno.");
-        return;
-      }
+    let steps = 0;
+    let lastZ = null;
+    let threshold = 12;
 
-      try {
-        const credential = await navigator.credentials.get({
-          publicKey: {
-            challenge: new Uint8Array(32),
-            timeout: 60000,
-            allowCredentials: [],
-            userVerification: "required" // nebo "preferred"
+    if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', function(event) {
+        const z = event.accelerationIncludingGravity.z;
+
+        if (lastZ !== null) {
+          let deltaZ = Math.abs(z - lastZ);
+          if (deltaZ > threshold) {
+            steps++;
+            document.getElementById("steps").textContent = steps;
           }
-        });
+        }
 
-        alert("Přihlášení úspěšné!");
-      } catch (e) {
-        alert("Chyba: " + e.name + " – " + e.message);
-      }
+        lastZ = z;
+      });
+    } else {
+      alert("Toto zařízení nepodporuje DeviceMotion.");
     }
   </script>
 </body>
