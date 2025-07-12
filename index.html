@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Otisk prstu</title>
+  <title>Ověření otiskem</title>
 </head>
 <body>
   <h2>Ověření otiskem prstu</h2>
@@ -20,12 +20,13 @@
             challenge: new Uint8Array(32),
             timeout: 60000,
             allowCredentials: [],
-            userVerification: "preferred"
+            userVerification: "required" // nebo "preferred"
           }
         });
+
         alert("Přihlášení úspěšné!");
       } catch (e) {
-        alert("Chyba: " + e.message);
+        alert("Chyba: " + e.name + " – " + e.message);
       }
     }
   </script>
